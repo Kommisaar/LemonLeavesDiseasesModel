@@ -8,7 +8,7 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from torchvision.models import EfficientNet_V2_M_Weights
 
-from LemonLeavesDiseaseModel import LemonLeavesDiseasesModel
+from LemonLeavesDiseasesModel import LemonLeavesDiseasesModel
 from LemonLeavesDiseasesDataset import LemonLeavesDiseasesDataset, lemon_leaves_load_data
 from LemonLeavesDiseasesTrain import lemon_leaves_train_model
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # 初始化预训练模型
-    model = LemonLeavesDiseasesModel(num_classes=9, weights=EfficientNet_V2_M_Weights.DEFAULT).to(device)
+    model = LemonLeavesDiseasesModel(weights=EfficientNet_V2_M_Weights.DEFAULT).to(device)
 
     # 加载数据
     root_dir = Path('../Data/Original Dataset')
@@ -47,16 +47,14 @@ if __name__ == '__main__':
 
     # 数据集划分
     train_val_data, test_data, train_val_labels, test_labels = train_test_split(data, label, test_size=0.2,
-                                                                                random_state=42)
+                                                                                random_state=42, stratify=label)
     train_data, val_data, train_labels, val_labels = train_test_split(train_val_data, train_val_labels,
-                                                                      test_size=0.25, random_state=42)
+                                                                      test_size=0.25, random_state=42, stratify=label)
     # 定义训练轮次、批次大小、学习率、惩罚率
     num_epochs = 75
-    weight_decay = 0
     learning_rate = 0.001
     train_batch_size = 128
     val_batch_size = 512
-    classes_names = 0
 
     lemon_leaves_transformer = get_lemon_transformer()
 
@@ -73,6 +71,10 @@ if __name__ == '__main__':
 
     # 获取类型名称
     class_types = [str(class_name.stem) for class_name in root_dir.iterdir()]
+
+    continue_last_model = True
+    if continue_last_model:
+        model.load_state_dict(torch.load("../ModelWeights/LastModel-LemonLeaves.pth"))
 
     # 定义损失函数
     criterion = CrossEntropyLoss()
