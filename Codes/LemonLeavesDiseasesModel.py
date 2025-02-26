@@ -4,10 +4,12 @@ from torchvision.models.efficientnet import efficientnet_v2_m
 
 
 class LemonLeavesDiseasesModel(nn.Module):
-    def __init__(self, num_classes: int, weights=None):
+    def __init__(self, weights=None):
         super().__init__()
         # 加载预训练权重
         self.model = efficientnet_v2_m(weights=weights)
+        self.classes_types = ["Anthracnose", "Bacterial Blight", "Citrus Canker", "Curl Virus", "Deficiency Leaf",
+                              "Dry Leaf", "Healthy Leaf", "Sooty Mould", "Spider Mites"]
 
         # 冻结特征提取层
         for param in self.model.parameters():
@@ -16,7 +18,7 @@ class LemonLeavesDiseasesModel(nn.Module):
         # 替换分类器
         self.model.classifier = nn.Sequential(
             nn.Dropout(0.3, inplace=True),
-            nn.Linear(1280, num_classes)
+            nn.Linear(1280, len(self.classes_types))
         )
 
         # 初始化分类器权重
@@ -54,5 +56,3 @@ class LemonLeavesDiseasesModel(nn.Module):
             output = self.model(x)
             pred = torch.softmax(output, dim=1)
         return pred
-
-
