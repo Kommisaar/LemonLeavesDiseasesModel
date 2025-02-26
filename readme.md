@@ -172,31 +172,31 @@ optimizer = AdamW(params, lr=learning_rate)
 
 ### 训练集与验证集的损失变化
 
-![训练集与验证集损失变化](./assets/训练集与验证集的损失变化.png)
+![训练集与验证集损失变化](Docs/assets/训练集与验证集的损失变化.png)
 
 ### 训练集与验证集的准确率变化
 
-![训练集与验证集准确率变化](./assets/训练集与验证集的准确率变化.png)
+![训练集与验证集准确率变化](Docs/assets/训练集与验证集的准确率变化.png)
 
 ### 训练集与验证集的召回率变化
 
-![训练集与验证集的召回率变化](./assets/训练集与验证集的召回率变化.png)
+![训练集与验证集的召回率变化](Docs/assets/训练集与验证集的召回率变化.png)
 
 ### 训练集与验证集的精确率变化
 
-![训练集与验证集的精确率变化](./assets/训练集与验证集的精确率变化.png)
+![训练集与验证集的精确率变化](Docs/assets/训练集与验证集的精确率变化.png)
 
 ### 训练集与验证集的F1分数变化
 
-![训练集与验证集的F1分数变化](./assets/训练集与验证集的F1分数变化.png)
+![训练集与验证集的F1分数变化](Docs/assets/训练集与验证集的F1分数变化.png)
 
 ### 验证集的混淆矩阵
 
-![验证集的混淆矩阵](./assets/验证集的混淆矩阵.png)
+![验证集的混淆矩阵](Docs/assets/验证集的混淆矩阵.png)
 
 ### 验证集的ROC曲线
 
-![验证集的ROC曲线](./assets/验证集的ROC曲线.png)
+![验证集的ROC曲线](Docs/assets/验证集的ROC曲线.png)
 
 # 模型验证
 
@@ -204,17 +204,17 @@ optimizer = AdamW(params, lr=learning_rate)
 
 ### 测试集的预测概率
 
-![测试集的预测结果](./assets/测试集的预测结果.png)
+![测试集的预测结果](Docs/assets/测试集的预测结果.png)
 
 ## 指标报表
 
 ### 测试集的性能报表
 
-![测试集的性能报表](./assets/测试集的性能报表.png)
+![测试集的性能报表](Docs/assets/测试集的性能报表.png)
 
 ### 测试集的混淆矩阵
 
-![测试集的混淆矩阵](./assets/测试集的混淆矩阵.png)
+![测试集的混淆矩阵](Docs/assets/测试集的混淆矩阵.png)
 
 # 模型优化
 
@@ -253,7 +253,7 @@ train_data, val_data, train_labels, val_labels = train_test_split(train_val_data
 
 ## 使用数据集之外的图片进行预测
 
-![炭疽病叶片](./assets/炭疽病叶片1.jpg)
+![炭疽病叶片](Docs/assets/炭疽病叶片1.jpg)
 
 ## 代码实现
 
@@ -266,22 +266,22 @@ from torchvision.transforms import v2
 from LemonLeavesDiseaseModel import LemonLeavesDiseasesModel
 
 if __name__ == '__main__':
-    image = Image.open("../Data/New Images/炭疽病1.jpg")
-    transform = v2.Compose([
-        v2.Resize(size=(480, 480)),
-        v2.PILToTensor(),
-        v2.ToDtype(dtype=torch.float32)
-    ])
+  image = Image.open("Data/New Images/炭疽病1.jpg")
+  transform = v2.Compose([
+    v2.Resize(size=(480, 480)),
+    v2.PILToTensor(),
+    v2.ToDtype(dtype=torch.float32)
+  ])
 
-    model = LemonLeavesDiseasesModel()
-    model.load_state_dict(torch.load("../ModelWeights/LastModel-LemonLeaves.pth", map_location=torch.device('cpu')))
+  model = LemonLeavesDiseasesModel()
+  model.load_state_dict(torch.load("ModelWeights/LastModel-LemonLeaves.pth", map_location=torch.device('cpu')))
 
-    probs = model.predict_proba(transform(image).unsqueeze(0))
-    prediction_dataframe = pd.DataFrame(probs, columns=model.classes_types)
-    prediction_dataframe["Prediction"] = torch.argmax(probs, dim=1)
-    prediction_dataframe["Prediction Label"] = prediction_dataframe["Prediction"].apply(lambda x: model.classes_types[x])
+  probs = model.predict_proba(transform(image).unsqueeze(0))
+  prediction_dataframe = pd.DataFrame(probs, columns=model.classes_types)
+  prediction_dataframe["Prediction"] = torch.argmax(probs, dim=1)
+  prediction_dataframe["Prediction Label"] = prediction_dataframe["Prediction"].apply(lambda x: model.classes_types[x])
 
-    print(prediction_dataframe)
+  print(prediction_dataframe)
 ```
 
 ## 结果
