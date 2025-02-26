@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
-from LemonLeavesDiseaseModel import LemonLeavesDiseasesModel
+from LemonLeavesDiseasesModel import LemonLeavesDiseasesModel
 from LemonLeavesDiseasesDataset import lemon_leaves_load_data, LemonLeavesDiseasesDataset
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     class_types = [str(class_name.stem) for class_name in root_dir.iterdir()]
     model = LemonLeavesDiseasesModel(len(class_types))
-    model.load_state_dict(torch.load("../ModelWeights/LastModel-LemonLeaves.pth",map_location="cpu"))
+    model.load_state_dict(torch.load("../ModelWeights/LastModel-LemonLeaves.pth", map_location="cpu"))
 
     data_loader = DataLoader(LemonLeavesDiseasesDataset(test_data, test_labels), shuffle=True, batch_size=32)
 
