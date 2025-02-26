@@ -3,7 +3,7 @@ import time
 import torch
 import wandb
 from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score
-from LemonLeavesDiseaseModel import LemonLeavesDiseasesModel
+from LemonLeavesDiseasesModel import LemonLeavesDiseasesModel
 import numpy as np
 
 
@@ -114,7 +114,7 @@ def __get_metrics_collector(classes_num: int) -> MetricCollection:
 
 def __init_wandb(project_name, num_epochs, batch_size, optimizer_type='AdamW', weight_decay=0):
     # 初始化WandB
-    wandb.init(project=project_name,dir="../WandBLogs/")
+    wandb.init(project=project_name, dir="../WandBLogs/")
     wandb.config.update({
         'epochs': num_epochs,
         'batch_size': batch_size,
